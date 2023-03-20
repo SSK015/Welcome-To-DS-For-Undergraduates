@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>Markmap</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+}
+#mindmap {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+}
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/markmap-toolbar@0.14.4/dist/style.css">
+</head>
+<body>
+<svg id="mindmap"></svg>
+<script src="https://cdn.jsdelivr.net/npm/d3@6.7.0"></script><script src="https://cdn.jsdelivr.net/npm/markmap-view@0.14.4"></script><script src="https://cdn.jsdelivr.net/npm/markmap-toolbar@0.14.4/dist/index.umd.min.js"></script><script>(r => {
+                setTimeout(r);
+              })(() => {
+  const {
+    markmap,
+    mm
+  } = window;
+  const toolbar = new markmap.Toolbar();
+  toolbar.attach(mm);
+  const el = toolbar.render();
+  el.setAttribute('style', 'position:absolute;bottom:20px;right:20px');
+  document.body.append(el);
+})</script><script>((getMarkmap, getOptions, root, jsonOptions) => {
+        const markmap = getMarkmap();
+        window.mm = markmap.Markmap.create('svg#mindmap', (getOptions || markmap.deriveOptions)(jsonOptions), root);
+      })(() => window.markmap,null,{"type":"root","depth":0,"content":"","children":[{"type":"heading","depth":1,"payload":{"lines":[0,1]},"content":"Click here <a href=\"https://web.stanford.edu/class/cs246/slides/05-clustering.pdf\">Slide(pdf)</a>"},{"type":"heading","depth":1,"payload":{"lines":[2,3]},"content":"What is Clustering?","children":[{"type":"heading","depth":2,"payload":{"lines":[5,6]},"content":"distance : mainly Euclidean or Jaccard"}]},{"type":"heading","depth":1,"payload":{"lines":[7,8]},"content":"Why is Clustering hard?","children":[{"type":"heading","depth":2,"payload":{"lines":[8,9]},"content":"Too many dimensions: isolated points"}]},{"type":"heading","depth":1,"payload":{"lines":[10,11]},"content":"Two main methods:","children":[{"type":"heading","depth":2,"payload":{"lines":[11,12]},"content":"Hierarchical: bottom up and top down"},{"type":"heading","depth":2,"payload":{"lines":[12,13]},"content":"Assign: assign points to a Existing cluster"}]},{"type":"heading","depth":1,"payload":{"lines":[14,15]},"content":"Hierarchical(between clusters):","children":[{"type":"heading","depth":2,"payload":{"lines":[15,16]},"content":"note:","children":[{"type":"list_item","depth":3,"payload":{"lines":[16,17],"index":1},"content":"1. represent a cluster."},{"type":"list_item","depth":3,"payload":{"lines":[17,18],"index":2},"content":"2. determine the nearness of clusters."},{"type":"list_item","depth":3,"payload":{"lines":[18,19],"index":3},"content":"3. when to stop merging clusters."}]},{"type":"heading","depth":2,"payload":{"lines":[19,20]},"content":"Euclidean case:","children":[{"type":"list_item","depth":3,"payload":{"lines":[20,21],"index":1},"content":"1. centroid(average)"},{"type":"list_item","depth":3,"payload":{"lines":[21,23],"index":2},"content":"2. (1) distance of centroids<br>\n(2) shortest distance between two clusters"}]},{"type":"heading","depth":2,"payload":{"lines":[24,25]},"content":"UnEuclidean case:","children":[{"type":"heading","depth":3,"payload":{"lines":[26,27]},"content":"Approach 1","children":[{"type":"list_item","depth":4,"payload":{"lines":[27,29],"index":1},"content":"1. choose Clustroid(a exisiting point)<br>\nmaxium/average/square of dis"},{"type":"list_item","depth":4,"payload":{"lines":[30,31],"index":2},"content":"2. various distance and cohesion measures"}]},{"type":"heading","depth":3,"payload":{"lines":[31,32]},"content":"Approach 2","children":[{"type":"list_item","depth":4,"payload":{"lines":[32,33],"index":1},"content":"1. the collection of points."},{"type":"list_item","depth":4,"payload":{"lines":[33,35],"index":2},"content":"2. define inter-cluster distance.<br>\nmin of two or avg of all pairs."}]},{"type":"heading","depth":3,"payload":{"lines":[35,36]},"content":"Approach 3","children":[{"type":"list_item","depth":4,"payload":{"lines":[36,37],"index":1},"content":"1. the collection of points."},{"type":"list_item","depth":4,"payload":{"lines":[37,39],"index":2},"content":"2. define a notion of cohesion, merge similiar unions.<br>\ndiamter, avg dis, density"}]},{"type":"heading","depth":3,"payload":{"lines":[39,40]},"content":"3.","children":[{"type":"heading","depth":4,"payload":{"lines":[40,41]},"content":"design 1: convex clusters"},{"type":"heading","depth":4,"payload":{"lines":[41,42]},"content":"design 2: concentric clusters."}]}]}]},{"type":"heading","depth":1,"payload":{"lines":[43,44]},"content":"K-Means(Assignment)","children":[{"type":"heading","depth":2,"payload":{"lines":[45,46]},"content":"definition: a method, not a algorithm."},{"type":"heading","depth":2,"payload":{"lines":[47,48]},"content":"method: Before convergence(all the points don't move), assign points and update centroids","children":[{"type":"heading","depth":3,"payload":{"lines":[49,50]},"content":"select k: try different k, get the value when avg dis to centroid stop changing dramatically."}]}]}],"payload":{}},{})</script>
+</body>
+</html>
