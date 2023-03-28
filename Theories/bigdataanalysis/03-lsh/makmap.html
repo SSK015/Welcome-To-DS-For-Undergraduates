@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>Markmap</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+}
+#mindmap {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+}
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/markmap-toolbar@0.14.4/dist/style.css">
+</head>
+<body>
+<svg id="mindmap"></svg>
+<script src="https://cdn.jsdelivr.net/npm/d3@6.7.0"></script><script src="https://cdn.jsdelivr.net/npm/markmap-view@0.14.4"></script><script src="https://cdn.jsdelivr.net/npm/markmap-toolbar@0.14.4/dist/index.umd.min.js"></script><script>(r => {
+                setTimeout(r);
+              })(() => {
+  const {
+    markmap,
+    mm
+  } = window;
+  const toolbar = new markmap.Toolbar();
+  toolbar.attach(mm);
+  const el = toolbar.render();
+  el.setAttribute('style', 'position:absolute;bottom:20px;right:20px');
+  document.body.append(el);
+})</script><script>((getMarkmap, getOptions, root, jsonOptions) => {
+        const markmap = getMarkmap();
+        window.mm = markmap.Markmap.create('svg#mindmap', (getOptions || markmap.deriveOptions)(jsonOptions), root);
+      })(() => window.markmap,null,{"type":"root","depth":0,"content":"","children":[{"type":"heading","depth":1,"payload":{"lines":[0,1]},"content":"Click here <a href=\"https://web.stanford.edu/class/cs246/slides/03-lsh.pdf\">Slide(pdf)</a>)"},{"type":"heading","depth":1,"payload":{"lines":[2,3]},"content":"LSH: Locality-Sensitive Hashing","children":[{"type":"heading","depth":2,"payload":{"lines":[3,4]},"content":"a way to find &quot;similiar&quot; sets."},{"type":"heading","depth":2,"payload":{"lines":[4,5]},"content":"upside: only a small faction of points are ever examined"},{"type":"heading","depth":2,"payload":{"lines":[5,6]},"content":"downside: exists false negatives"}]},{"type":"heading","depth":1,"payload":{"lines":[7,8]},"content":"Steps for similiar docs","children":[{"type":"heading","depth":2,"payload":{"lines":[8,9]},"content":"fisrt. Shingling","children":[{"type":"heading","depth":3,"payload":{"lines":[10,11]},"content":"1. hash shingles to a few bytes"},{"type":"heading","depth":3,"payload":{"lines":[12,13]},"content":"2. Compute Sim(C1, C2)"}]},{"type":"heading","depth":2,"payload":{"lines":[21,22]},"content":"second. Min-hashing","children":[{"type":"heading","depth":3,"payload":{"lines":[24,25]},"content":"Find a hash function h(x) make that:"},{"type":"heading","depth":3,"payload":{"lines":[28,29]},"content":"The function to our taste is Min-hashing"},{"type":"heading","depth":3,"payload":{"lines":[29,30]},"content":"Then we get signatures."}]},{"type":"heading","depth":2,"payload":{"lines":[30,31]},"content":"third. LSH :","children":[{"type":"heading","depth":3,"payload":{"lines":[31,32]},"content":"Focus on pairs of signatures likely to be from similiar documents"},{"type":"heading","depth":3,"payload":{"lines":[32,33]},"content":"There uses bands and rows to reduce the error."},{"type":"heading","depth":3,"payload":{"lines":[34,35]},"content":"Use hashing to find candidate pairs of simiarity &gt;= s"}]}]}],"payload":{}},{})</script>
+</body>
+</html>
