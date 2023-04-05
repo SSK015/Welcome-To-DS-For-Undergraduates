@@ -42,3 +42,23 @@ Formula : See slides1 Page24.
 #### find similar items to the unique item
 
 #### Biased on unique user's ratings
+
+## Improvements in the Netflix game
+### The important idea: A three layer structure
+### Upper layer: Global
+#### Consider overall deviations of users/movies
+overall deviations of users
+#### Add bias according to the mean of users/movies
+
+### Middle layer: Regional
+Factorization: Addressing "regional" effects
+
+#### choose SGD to do that
+
+### Lower layer: Local 
+CF: Extract local patterns
+Made model modifications
+See slides2Page10
+#### Use weight to relace similarity
+weight(i,j) -> minimize SSE on traing data
+Use Convex optimization to do so
