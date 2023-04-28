@@ -1,0 +1,128 @@
+#!/usr/bin/python
+# -*- encoding: utf-8 -*-
+
+from collections import defaultdict
+import Apriori as ap
+import hashlib
+import psutil
+from time import time
+
+
+def hashPairs(baskets: list, Lk: set, bucketSize: int, minSupport: float, hashFunc) -> int:
+    """
+    将每一对hash到桶中，根据最小支持度，返回bitmap
+    """
+    bitmap: int = 0
+    buckets = defaultdict(int)
+    for basket in baskets:
+        for item in Lk:
+            if item.issubset(basket):
+                for anotherItem in (basket - item):
+                    pair = frozenset([anotherItem]) | item
+                    bucketNo = hashFunc(pair) % bucketSize
+                    buckets[bucketNo] += 1
+    for k, v in buckets.items():
+        curSupport = float(v) / len(baskets)
+        if curSupport >= minSupport:
+            bitmap += 1 << k
+    return bitmap
+
+
+def genCkByBitMap(Lk: set, bitmap: int, bucketSize: int, k: int, hashFunc) -> set:
+    """
+    依据bitmap获取k项候选集，即PCY优化
+    """
+    Ck = set()
+    sz = len(Lk)
+    tmpLst = list(Lk)
+    for i in range(sz):
+        for j in range(i + 1, sz):
+            nxtItem = frozenset(tmpLst[i] | tmpLst[j])
+            hashVal = hashFunc(nxtItem) % bucketSize
+            if len(nxtItem) == k and (bitmap & (1 << hashVal)) != 0:
+                Ck.add(nxtItem)
+    return Ck
+
+
+def pcy(baskets: list, minSupport: float, minConfidence: float,
+        maxK: int, bucketSize: int, hashFunc1, hashFunc2) -> (list, int, defaultdict):
+    C1 = ap.genC1(baskets)
+    L1, sup1 = ap.genFreqSet(baskets, C1, minSupport)
+    print("1", len(L1))
+    # two hash func
+    bitmap1 = hashPairs(baskets, L1, bucketSize, minSupport, hashFunc1)
+    Ck1 = genCkByBitMap(L1, bitmap1, bucketSize, 2, hashFunc1)
+
+    # process = psutil.Process()
+    # print(f"Memory usage: {process.memory_info().rss}")
+
+    bitmap2 = hashPairs(baskets, L1, bucketSize, minSupport, hashFunc2)
+    Ck2 = genCkByBitMap(L1, bitmap2, bucketSize, 2, hashFunc2)
+    Ck = Ck1 & Ck2
+
+    L = [set(), L1]
+    sup = [defaultdict(float), sup1]
+
+    k = 2
+    while True:
+        Lk, supk = ap.genFreqSet(baskets, Ck, minSupport)
+        L.append(Lk)
+        sup.append(supk)
+        if k == maxK:
+            break
+        print(k, len(Lk))
+        k += 1
+        Ck = ap.genCk(L[k - 1], k)
+    return sup, bitmap1, ap.genRules(L, sup, minConfidence)
+
+
+if __name__ == '__main__':
+    minConf = 0.5
+    minSup = 0.005
+    # maxk = 3
+    bucketSize = 6666
+    idMap, dataSet = ap.loadData("Groceries.csv")
+    itemBaskets = list(map(frozenset, dataSet))
+
+
+    def hashFuncForPair1(pair: set) -> int:
+        # sha1 = hashlib.sha1()
+        hashVal = 1
+        for item in pair:
+            # sha1.update(idMap[item].encode("utf-8"))
+            hashVal *= hash(idMap[item])
+            # hashVal += hash(idMap[item])
+        return hashVal
+
+
+    def hashFuncForPair2(pair: set) -> int:
+        sha1 = hashlib.sha1()
+        # hashVal = 0
+        for item in pair:
+            sha1.update(idMap[item].encode("utf-8"))
+            # hashVal *= hash(idMap[item])
+            # hashVal += hash(idMap[item])
+        return int(sha1.hexdigest(), 16)
+        # return hashVal
+
+
+    startTime = time()
+    sups, bitmap1, rules = pcy(itemBaskets, minSup, minConf, 4, bucketSize, hashFuncForPair1, hashFuncForPair2)
+    endTime = time()
+    print("Time cost: {}".format(endTime - startTime))
+
+    with open("pcy_result.txt", "w")as f:
+        for i in range(1, 4):
+            f.write("{}-set size: {}\n".format(i, len(sups[i])))
+        f.write("number of rules: {}\n".format(len(rules)))
+        f.write("number of buckets: {}\n".format(bucketSize))
+        # f.write("bitmap for L2: {:0^{}b}\n".format(bitmap1, bucketSize))
+        for sup in sups:
+            for k, v in dict(sup).items():
+                f.write("{}: {}\n".format(set(map(idMap.get, k)), v))
+        for k, v in dict(rules).items():
+            f.write("{} => {}: {}\n".format(set(map(idMap.get, k[0])),
+                                            set(map(idMap.get, k[1])), v))
+
+        process = psutil.Process()
+        print(f"Memory usage: {process.memory_info().rss}")
